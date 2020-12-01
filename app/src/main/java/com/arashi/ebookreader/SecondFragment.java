@@ -22,11 +22,14 @@ import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 public class SecondFragment extends Fragment {
 
     private TextView outputTextView;
-    private Button back_btn;
-    private Button next_btn;
+    private FloatingActionButton back_btn;
+    private FloatingActionButton next_btn;
+    private FloatingActionButton close_btn;
 
     public static int index = 1;
     public static int count = 1;
@@ -51,9 +54,10 @@ public class SecondFragment extends Fragment {
 
 
         outputTextView = getView().findViewById(R.id.output_text);
-        outputTextView.setMovementMethod(new ScrollingMovementMethod());
+
         back_btn = getView().findViewById(R.id.back_btn);
         next_btn = getView().findViewById(R.id.next_btn);
+        close_btn = getView().findViewById(R.id.close_btn);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         String chapter_count = preferences.getString("chapter_count", "1");
@@ -78,7 +82,7 @@ public class SecondFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                if(index >1 && index < count) {
+                if(index >1 && index <= count) {
                     index--;
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
                     String content = preferences.getString("chapter_" + index, "no content!");
@@ -108,7 +112,7 @@ public class SecondFragment extends Fragment {
 
 
 
-        view.findViewById(R.id.close_btn).setOnClickListener(new View.OnClickListener() {
+        close_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
             {

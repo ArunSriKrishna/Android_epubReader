@@ -2,6 +2,8 @@ package com.arashi.ebookreader;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,6 +34,7 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+
 public class FirstFragment extends Fragment {
 
     ImageView imageView;
@@ -41,6 +44,7 @@ public class FirstFragment extends Fragment {
 
     public static String filetype = "";
     public static Boolean flag = false;
+    public static String cover = "default";
 
     private static final int READ_REQUEST_CODE = 42;
 
@@ -79,7 +83,8 @@ public class FirstFragment extends Fragment {
             public void onClick(View v)
             {
                 String[] mimeTypes =
-                        {       "text/*",
+                        {
+                                "text/*",
                                 "application/epub+zip",
                                 "application/zip"};
 
@@ -121,19 +126,42 @@ public class FirstFragment extends Fragment {
         Toast.makeText( getActivity(), path.substring(path.lastIndexOf("/") +1) + " Selected!", Toast.LENGTH_SHORT).show();
         readFileDetails(path);
 
-        if(filetype.equals("txt"))
-        {
-            readFile(path);
-        }
-        else if(filetype.equals("epub"))
+
+        if (filetype.equals("epub"))
         {
             readEpub(path);
+        }
+        else
+        {
+            readFile(path);
         }
 
         if(flag == true)
         {
             imageView.setVisibility(View.VISIBLE);
             button.setEnabled(true);
+
+            if(!cover.equals("default"))
+            {
+                try
+                {
+                    ZipFile zipfile = new ZipFile(Environment.getExternalStorageDirectory() + "/" + path);
+                    ZipEntry zipEntry = zipfile.getEntry(cover);
+                    InputStream inputStream = zipfile.getInputStream(zipEntry);
+
+                    final BitmapFactory.Options options = new BitmapFactory.Options();
+                    Bitmap image = BitmapFactory.decodeStream(inputStream);
+
+                    ImageView coverimg = (ImageView) getActivity().findViewById(R.id.bookicon);
+                    imageView.setImageBitmap(image);
+
+                }
+
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
         }
         else
         {
@@ -216,9 +244,6 @@ public class FirstFragment extends Fragment {
             Log.d("filedir", "" +Environment.getExternalStorageDirectory() + "/" + input );
             ZipFile zipfile = new ZipFile(Environment.getExternalStorageDirectory() + "/" + input);
 
-
-            String cover = "default";
-
             StringBuilder sbr_d = new StringBuilder();
             StringBuilder sbr_f = new StringBuilder();
             StringBuilder sbr_c = new StringBuilder();
@@ -241,7 +266,7 @@ public class FirstFragment extends Fragment {
                     }
                     else
                     {
-                        if(entry.getName().contains("OEBPF/images/cover"))
+                        if(entry.getName().contains("OEBPF/images/cover") | entry.getName().contains("EPUB/images/cover"))
                         {
                             cover = entry.getName();
                         }

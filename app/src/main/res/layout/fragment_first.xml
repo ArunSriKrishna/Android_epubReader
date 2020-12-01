@@ -42,19 +42,29 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="20dp"
         app:srcCompat="@drawable/ic_open"
-        android:backgroundTint="@color/purple_200"
         android:elevation="10dp"
         />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/selected"
+        android:layout_margin="40dp"
+        app:cardCornerRadius="5dp"
+        android:elevation="20dp"
+        >
 
     <ImageView
         android:id="@+id/bookicon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/book"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@id/selected"
-        android:layout_margin="40dp"
         android:visibility="invisible"
-        />
+        android:rotation="0"
+        android:maxHeight="280dp"
+        android:maxWidth="240dp"
 
+        />
+    </androidx.cardview.widget.CardView>
 </RelativeLayout>
